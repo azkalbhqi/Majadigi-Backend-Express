@@ -11,6 +11,7 @@ import { errorHandler } from './middleware/error.handler.js';
 // import authRoutes from './features/auth/auth.routes.js'; // Nanti diuncomment kalau file sudah ada
 import transjatimRouter from './features/transjatim/transjatim.router.js';
 import opendataRouter from './features/opendata/opendata.router.js';
+import nomorRouter from './features/nomor-darurat/nomor.router.js';
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.get('/health', (req, res) => {
 
 app.use('/transjatim', transjatimRouter);
 app.use('/opendata', opendataRouter);
+app.use('/nomor-darurat', nomorRouter);
 
 // --- Error Handling ---
 app.use(errorHandler);
