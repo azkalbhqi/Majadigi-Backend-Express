@@ -1,0 +1,118 @@
+openapi: 3.0.0
+info:
+  title: TransJatim API
+  version: 1.0.0
+paths:
+  /transjatim/summary:
+    get:
+      tags:
+        - TransJatim
+      summary: Get aggregated summary of TransJatim data
+      description: Returns aggregated TransJatim data including summary of routes, tarifs, etc.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Data Trans Jatim berhasil di-agregat
+                  data:
+                    type: object
+
+  /transjatim/tarif:
+    get:
+      tags:
+        - TransJatim
+      summary: Get TransJatim tariff data
+      description: Returns tariff details for TransJatim
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Data Tarif Trans Jatim berhasil diambil
+                  data:
+                    type: object
+
+  /transjatim/rute:
+    get:
+      tags:
+        - TransJatim
+      summary: Get TransJatim routes data
+      description: Returns all route information for TransJatim
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Data Rute Trans Jatim berhasil diambil
+                  data:
+                    type: object
+
+  /transjatim/bus-stops:
+    get:
+      tags:
+        - TransJatim
+      summary: Get TransJatim bus stops by corridor
+      description: Returns bus stop details for a specific corridor
+      parameters:
+        - in: query
+          name: koridor
+          required: true
+          schema:
+            type: string
+          description: The corridor name (e.g., JTM2)
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Data Bus Stop koridor JTM2 berhasil diambil
+                  data:
+                    type: array
+                    items:
+                      type: object
+        '400':
+          description: Bad request, missing koridor parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Parameter "koridor" (nama koridor) diperlukan

@@ -8,6 +8,8 @@ import dotenv from 'dotenv';
 // Import Middlewares & Routes
 import { errorHandler } from './middleware/error.handler.js';
 
+import setupSwagger from './config/swagger.js';
+
 // import authRoutes from './features/auth/auth.routes.js'; // Nanti diuncomment kalau file sudah ada
 import transjatimRouter from './features/transjatim/transjatim.router.js';
 import opendataRouter from './features/opendata/opendata.router.js';
@@ -41,5 +43,9 @@ app.use('/nomor-darurat', nomorRouter);
 
 // --- Error Handling ---
 app.use(errorHandler);
+
+// --swagger docs setup
+
+setupSwagger(app);
 
 export default app;

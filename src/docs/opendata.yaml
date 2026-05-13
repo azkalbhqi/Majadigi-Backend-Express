@@ -1,0 +1,42 @@
+openapi: 3.0.0
+info:
+  title: OpenData API
+  version: 1.0.0
+paths:
+  /opendata/datasets:
+    get:
+      tags:
+        - OpenData
+      summary: List available datasets
+      description: Returns a list of datasets, optionally filtered by a search term.
+      parameters:
+        - in: query
+          name: search
+          required: false
+          schema:
+            type: string
+          description: Search term to filter datasets (e.g., kemiskinan)
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Datasets found
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        example: 10
+                  data:
+                    type: array
+                    items:
+                      type: object

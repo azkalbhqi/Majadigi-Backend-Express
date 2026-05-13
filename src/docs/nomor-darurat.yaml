@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: Nomor Darurat API
+  version: 1.0.0
+paths:
+  /nomor-darurat:
+    get:
+      tags:
+        - NomorDarurat
+      summary: Get emergency numbers
+      description: Returns emergency numbers. If cityId is provided, returns numbers for that city, otherwise returns default numbers.
+      parameters:
+        - in: query
+          name: cityId
+          required: false
+          schema:
+            type: string
+          description: Optional ID of the city
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Default emergency numbers retrieved successfully
+                  count:
+                    type: integer
+                    example: 5
+                  data:
+                    type: array
+                    items:
+                      type: object
+
+  /nomor-darurat/cities:
+    get:
+      tags:
+        - NomorDarurat
+      summary: Get list of cities
+      description: Returns a list of cities that have emergency numbers available
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Cities retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
