@@ -1,0 +1,74 @@
+tags:
+  - name: RSUD Dr. Soetomo
+    description: Endpoints for RSUD Dr. Soetomo
+
+paths:
+  /soetomo/rooms:
+    get:
+      tags:
+        - RSUD Dr. Soetomo
+      summary: Get room data for RSUD Dr. Soetomo
+      responses:
+        '200':
+          description: Successful response
+        '500':
+          description: Internal server error
+
+  /soetomo/register:
+    post:
+      tags:
+        - RSUD Dr. Soetomo
+      summary: Register a patient (JKN or NON_JKN)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - tipePasien
+                - nomorIdentitas
+                - tanggalLahir
+              properties:
+                userId:
+                  type: string
+                  description: User ID UUID
+                tipePasien:
+                  type: string
+                  enum: [JKN, NON_JKN]
+                  description: Patient type
+                nomorIdentitas:
+                  type: string
+                  description: BPJS (13 chars) or Medical Record number (9 chars)
+                tanggalLahir:
+                  type: string
+                  format: date-time
+                asalRujukan:
+                  type: string
+                  description: Required for JKN patient (e.g., Faskes 1, Faskes 2, Pasca Rawat Inap)
+      responses:
+        '201':
+          description: Registration successful
+        '400':
+          description: Validation error
+        '500':
+          description: Internal server error
+
+  /soetomo/history/{userId}:
+    get:
+      tags:
+        - RSUD Dr. Soetomo
+      summary: Get registration history for a user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+          description: User ID UUID
+      responses:
+        '200':
+          description: Successful response
+        '500':
+          description: Internal server error

@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-
+dotenv.config();
 
 // Import Middlewares & Routes
 import { errorHandler } from './middleware/error.handler.js';
@@ -14,8 +14,11 @@ import setupSwagger from './config/swagger.js';
 import transjatimRouter from './features/transjatim/transjatim.router.js';
 import opendataRouter from './features/opendata/opendata.router.js';
 import nomorRouter from './features/nomor-darurat/nomor.router.js';
-
-dotenv.config();
+import dahaHusadaRouter from './features/rumah-sakit/dahahusada/dahahusada.router.js';
+import soetomoRouter from './features/rumah-sakit/soetomo/soetomo.router.js';
+import hajiJatimRouter from './features/rumah-sakit/haji-jatim/haji.router.js';
+import karsahusadaRouter from './features/rumah-sakit/karsahusada/karsahusada.router.js';
+import saifulanwarRouter from './features/rumah-sakit/saifulanwar/saifulanwar.router.js';
 
 const app = express();
 
@@ -27,11 +30,11 @@ app.use(express.json());          // Parse JSON body
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-    res.status(200).json({ 
-      success: true, 
-      message: 'Majadigi Backend API is running. Please refer to the documentation for available endpoints.' 
-    });
+  res.status(200).json({
+    success: true,
+    message: 'Majadigi Backend API is running. Please refer to the documentation for available endpoints.'
   });
+});
 // --- Health Check ---
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Majadigi API is running' });
@@ -40,6 +43,13 @@ app.get('/health', (req, res) => {
 app.use('/transjatim', transjatimRouter);
 app.use('/opendata', opendataRouter);
 app.use('/nomor-darurat', nomorRouter);
+
+//Rumah sakit
+app.use('/daha-husada', dahaHusadaRouter);
+app.use('/soetomo', soetomoRouter);
+app.use('/haji-jatim', hajiJatimRouter);
+app.use('/karsahusada', karsahusadaRouter);
+app.use('/saiful-anwar', saifulanwarRouter);
 
 // --- Error Handling ---
 app.use(errorHandler);

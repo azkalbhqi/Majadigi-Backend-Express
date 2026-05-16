@@ -1,0 +1,104 @@
+tags:
+  - name: RSUD Daha Husada
+    description: Endpoints for RSUD Daha Husada
+
+paths:
+  /daha-husada/rooms:
+    get:
+      tags:
+        - RSUD Daha Husada
+      summary: Get room data for RSUD Daha Husada
+      responses:
+        '200':
+          description: Successful response
+        '500':
+          description: Internal server error
+
+  /daha-husada/polyclinics:
+    get:
+      tags:
+        - RSUD Daha Husada
+      summary: Get polyclinics for RSUD Daha Husada
+      responses:
+        '200':
+          description: Successful response
+        '500':
+          description: Internal server error
+
+  /daha-husada/surgery-schedule:
+    get:
+      tags:
+        - RSUD Daha Husada
+      summary: Get surgery schedule
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of items per page
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: poliId
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+        '500':
+          description: Internal server error
+
+  /daha-husada/{id}/doctor:
+    get:
+      tags:
+        - RSUD Daha Husada
+      summary: Get doctors for a specific polyclinic
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Polyclinic ID
+      responses:
+        '200':
+          description: Successful response
+        '500':
+          description: Internal server error
+
+  /daha-husada/queue/{polyclinicId}/doctor/{doctorId}:
+    get:
+      tags:
+        - RSUD Daha Husada
+      summary: Get queue for a specific doctor at a polyclinic
+      parameters:
+        - in: path
+          name: polyclinicId
+          required: true
+          schema:
+            type: string
+          description: Polyclinic ID
+        - in: path
+          name: doctorId
+          required: true
+          schema:
+            type: string
+          description: Doctor ID
+      responses:
+        '200':
+          description: Successful response
+        '500':
+          description: Internal server error

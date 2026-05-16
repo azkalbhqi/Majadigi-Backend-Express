@@ -1,11 +1,11 @@
-// controllers/dahahusada.controller.js
+// controllers/karsahusada.controller.js
 
-import * as service from './dahahusada.service.js';
+import * as service from './karsahusada.service.js';
 
 // GET ROOMS
 export const getRooms = async (req, res) => {
   try {
-    const roomData = await service.getDahaHusadaRooms();
+    const roomData = await service.getRooms();
 
     res.status(200).json(roomData);
   } catch (error) {
@@ -16,79 +16,6 @@ export const getRooms = async (req, res) => {
   }
 };
 
-// GET POLYCLINICS
-export const getPolyclinics = async (req, res) => {
-  try {
-    const polyclinicData = await service.getPolyclinics();
-
-    res.status(200).json(polyclinicData);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-      statusCode: 500,
-    });
-  }
-};
-
-// GET SURGERY SCHEDULE
-export const getSurgerySchedule = async (req, res) => {
-  try {
-    const {
-      page,
-      limit,
-      startDate,
-      endDate,
-      poliId,
-    } = req.query;
-
-    const surgeryData = await service.getSurgerySchedule({
-      page,
-      limit,
-      startDate,
-      endDate,
-      poliId,
-    });
-
-    res.status(200).json(surgeryData);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-      statusCode: 500,
-    });
-  }
-};
-
-// GET POLYCLINIC DOCTORS
-export const getPolyDoctor = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const doctorsData = await service.getPolyDoctor(id);
-
-    res.status(200).json(doctorsData);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-      statusCode: 500,
-    });
-  }
-};
-
-// GET DOCTOR QUEUE
-export const getDoctorQueue = async (req, res) => {
-  try {
-    const { polyclinicId, doctorId } = req.params;
-    const queueData = await service.getDoctorQueue(polyclinicId, doctorId);
-
-    res.status(200).json(queueData);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-      statusCode: 500,
-    });
-  }
-};
-
-//PENDAFTARAN PASIEN
 export const register = async (req, res) => {
   try {
     const { userId, tipePasien, nomorIdentitas, tanggalLahir, asalRujukan } = req.body;

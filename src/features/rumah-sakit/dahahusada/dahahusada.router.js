@@ -1,11 +1,29 @@
+// routes/dahahusada.routes.js
+
 import { Router } from 'express';
-import * as DahaController from './daha.controller.js';
+import * as DahaController from './dahahusada.controller.js';
 
 const router = Router();
 
-router.get('/overview', DahaController.getOverview);
-router.get('/antrian', DahaController.getAntrian);
-router.get('/rooms', DahaController.getRoomStatus);
-router.get('/surgery', DahaController.getSurgery);
+// GET ROOMS
+router.get('/rooms', DahaController.getRooms);
+
+// GET POLYCLINICS
+router.get('/polyclinics', DahaController.getPolyclinics);
+
+// GET SURGERY SCHEDULE
+router.get('/surgery-schedule', DahaController.getSurgerySchedule);
+
+// GET POLYCLINIC DOCTORS
+router.get('/:id/doctor', DahaController.getPolyDoctor);
+
+// GET DOCTOR QUEUE
+router.get('/queue/:polyclinicId/doctor/:doctorId', DahaController.getDoctorQueue);
+
+// POST REGISTER
+router.post('/register', DahaController.register);
+
+// GET REGISTRATION HISTORY
+router.get('/history/:userId', DahaController.getHistory);
 
 export default router;
