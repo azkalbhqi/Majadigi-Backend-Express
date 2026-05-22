@@ -1,0 +1,130 @@
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nik
+                - email
+                - name
+                - password
+              properties:
+                nik:
+                  type: string
+                  example: "3201011234567890"
+                  description: 16-digit Indonesian ID Number (NIK)
+                email:
+                  type: string
+                  example: "user@example.com"
+                name:
+                  type: string
+                  example: "Ahmad Dani"
+                password:
+                  type: string
+                  example: "mypassword123"
+      responses:
+        201:
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Pendaftaran berhasil"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "3201011234567890"
+                      name:
+                        type: string
+                        example: "Ahmad Dani"
+                      email:
+                        type: string
+                        example: "user@example.com"
+                      role:
+                        type: string
+                        example: "PATIENT"
+        400:
+          description: Validation error or missing fields
+        409:
+          description: NIK or Email already registered
+        500:
+          description: Internal server error
+
+  /auth/login:
+    post:
+      summary: Login user using NIK or Email
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - identifier
+                - password
+              properties:
+                identifier:
+                  type: string
+                  example: "user@example.com"
+                  description: Can be either NIK (id) or Email
+                password:
+                  type: string
+                  example: "mypassword123"
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Login berhasil"
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: "3201011234567890"
+                          name:
+                            type: string
+                            example: "Ahmad Dani"
+                          email:
+                            type: string
+                            example: "user@example.com"
+                          role:
+                            type: string
+                            example: "PATIENT"
+        400:
+          description: Missing identifier or password
+        401:
+          description: Invalid NIK/Email or password
+        500:
+          description: Internal server error

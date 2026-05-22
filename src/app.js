@@ -10,7 +10,7 @@ import { errorHandler } from './middleware/error.handler.js';
 
 import setupSwagger from './config/swagger.js';
 
-// import authRoutes from './features/auth/auth.routes.js'; // Nanti diuncomment kalau file sudah ada
+import authRoutes from './features/auth/auth.routes.js';
 import transjatimRouter from './features/transjatim/transjatim.router.js';
 import opendataRouter from './features/opendata/opendata.router.js';
 import nomorRouter from './features/nomor-darurat/nomor.router.js';
@@ -19,6 +19,7 @@ import soetomoRouter from './features/rumah-sakit/soetomo/soetomo.router.js';
 import hajiJatimRouter from './features/rumah-sakit/haji-jatim/haji.router.js';
 import karsahusadaRouter from './features/rumah-sakit/karsahusada/karsahusada.router.js';
 import saifulanwarRouter from './features/rumah-sakit/saifulanwar/saifulanwar.router.js';
+import sapabansosRouter from './features/sapa-bansos/sapabansos.router.js';
 
 const app = express();
 
@@ -40,9 +41,11 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Majadigi API is running' });
 });
 
+app.use('/auth', authRoutes);
 app.use('/transjatim', transjatimRouter);
 app.use('/opendata', opendataRouter);
 app.use('/nomor-darurat', nomorRouter);
+app.use('/sapa-bansos', sapabansosRouter);
 
 //Rumah sakit
 app.use('/daha-husada', dahaHusadaRouter);

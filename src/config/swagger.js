@@ -10,14 +10,14 @@ const options = {
     },
   },
   // Adjust this path if your files are in different locations
-  apis: ['./src/docs/*.yaml', './src/features/**/*.js', './src/app.js'], 
+  apis: ['./src/docs/*.yaml', './src/features/**/*.js', './src/app.js'],
 };
 
 const specs = swaggerJsdoc(options);
 
 // Use the standard ESM export syntax
 const setupSwagger = (app) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 };
 
 export default setupSwagger;

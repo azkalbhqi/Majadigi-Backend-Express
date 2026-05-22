@@ -4,86 +4,85 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" // or "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 // --- CORE USER & PROFILE ---
 
 model User {
-  id           String        @id @default(uuid())
-  name         String
-  email        String        @unique
-  phoneNumber  String?
-  password     String
-  address      String?
-  latitude     Decimal?
-  longitude    Decimal?
-  birthDate    DateTime?
-  role         String        @default("PATIENT")
-  createdAt    DateTime      @default(now())
-  
+  id          String    @id
+  name        String
+  email       String    @unique
+  phoneNumber String?
+  password    String
+  address     String?
+  latitude    Decimal?
+  longitude   Decimal?
+  birthDate   DateTime?
+  role        String    @default("PATIENT")
+  createdAt   DateTime  @default(now())
+
   // Relations
-  healthProfile HealthUser?
-  medicalRecords MedicalRecord[]
-  tbcScreenings  SkriningTbc[]
-  pendaftaranSoetomo PendaftaranSoetomo[]
-  pendaftaranHajiJatim PendaftaranHajiJatim[]
+  healthProfile          HealthUser?
+  medicalRecords         MedicalRecord[]
+  tbcScreenings          SkriningTbc[]
+  pendaftaranSoetomo     PendaftaranSoetomo[]
+  pendaftaranHajiJatim   PendaftaranHajiJatim[]
   pendaftaranKarsahusada PendaftaranKarsahusada[]
   pendaftaranSaifulAnwar PendaftaranSaifulAnwar[]
-  pendaftaranDahaHusada PendaftaranDahaHusada[]
+  pendaftaranDahaHusada  PendaftaranDahaHusada[]
 }
 
 model HealthUser {
-  id                String        @id @default(uuid())
-  userId            String        @unique
+  id                String  @id @default(uuid())
+  userId            String  @unique
   noBpjs            String?
   bloodType         String?
   vaccinationStatus String?
-  
-  user              User          @relation(fields: [userId], references: [id])
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 // --- HOSPITAL & SERVICES ---
 
 model RumahSakit {
-  id        Int      @id @default(autoincrement())
-  name      String
-  city      String
-  type      String
-  address   String
-  phone     String
-  
-  // Service Relations
-  medicalRecords   MedicalRecord[]
-}
+  id      Int    @id @default(autoincrement())
+  name    String
+  city    String
+  type    String
+  address String
+  phone   String
 
+  // Service Relations
+  medicalRecords MedicalRecord[]
+}
 
 // --- MEDICAL INFORMATION SYSTEM (As per Image) ---
 
 model MedicalRecord {
-  id           String     @id @default(uuid())
+  id           String   @id @default(uuid())
   userId       String
   rumahSakitId Int
   dokter       String
-  keluhan      String     @db.Text
-  createdAt    DateTime   @default(now())
+  keluhan      String   @db.Text
+  createdAt    DateTime @default(now())
 
-  user         User       @relation(fields: [userId], references: [id])
-  rumahSakit   RumahSakit @relation(fields: [rumahSakitId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+  rumahSakit RumahSakit @relation(fields: [rumahSakitId], references: [id])
 }
 
 model SkriningTbc {
-  id             Int       @id @default(autoincrement())
-  userId         String
-  coughDuration  Int
-  fever          Boolean
-  weightLoss     Boolean
-  nightSweat     Boolean
+  id              Int      @id @default(autoincrement())
+  userId          String
+  coughDuration   Int
+  fever           Boolean
+  weightLoss      Boolean
+  nightSweat      Boolean
   screeningResult String
-  screeningDate  DateTime  @default(now())
+  screeningDate   DateTime @default(now())
 
-  user           User      @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 enum TipePasien {
@@ -92,66 +91,66 @@ enum TipePasien {
 }
 
 model PendaftaranSoetomo {
-  id              String      @id @default(uuid())
-  userId          String
-  tipePasien      TipePasien
-  nomorIdentitas  String
-  tanggalLahir    DateTime
-  asalRujukan     String?
-  status          String      @default("PENDING")
-  createdAt       DateTime    @default(now())
+  id             String     @id @default(uuid())
+  userId         String
+  tipePasien     TipePasien
+  nomorIdentitas String
+  tanggalLahir   DateTime
+  asalRujukan    String?
+  status         String     @default("PENDING")
+  createdAt      DateTime   @default(now())
 
-  user            User        @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model PendaftaranHajiJatim {
-  id              String      @id @default(uuid())
-  userId          String
-  tipePasien      TipePasien
-  nomorIdentitas  String
-  tanggalLahir    DateTime
-  asalRujukan     String?
-  status          String      @default("PENDING")
-  createdAt       DateTime    @default(now())
+  id             String     @id @default(uuid())
+  userId         String
+  tipePasien     TipePasien
+  nomorIdentitas String
+  tanggalLahir   DateTime
+  asalRujukan    String?
+  status         String     @default("PENDING")
+  createdAt      DateTime   @default(now())
 
-  user            User        @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model PendaftaranKarsahusada {
-  id              String      @id @default(uuid())
-  userId          String
-  tipePasien      TipePasien
-  nomorIdentitas  String
-  tanggalLahir    DateTime
-  asalRujukan     String?
-  status          String      @default("PENDING")
-  createdAt       DateTime    @default(now())
+  id             String     @id @default(uuid())
+  userId         String
+  tipePasien     TipePasien
+  nomorIdentitas String
+  tanggalLahir   DateTime
+  asalRujukan    String?
+  status         String     @default("PENDING")
+  createdAt      DateTime   @default(now())
 
-  user            User        @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model PendaftaranSaifulAnwar {
-  id              String      @id @default(uuid())
-  userId          String
-  tipePasien      TipePasien
-  nomorIdentitas  String
-  tanggalLahir    DateTime
-  asalRujukan     String?
-  status          String      @default("PENDING")
-  createdAt       DateTime    @default(now())
+  id             String     @id @default(uuid())
+  userId         String
+  tipePasien     TipePasien
+  nomorIdentitas String
+  tanggalLahir   DateTime
+  asalRujukan    String?
+  status         String     @default("PENDING")
+  createdAt      DateTime   @default(now())
 
-  user            User        @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model PendaftaranDahaHusada {
-  id              String      @id @default(uuid())
-  userId          String
-  tipePasien      TipePasien
-  nomorIdentitas  String
-  tanggalLahir    DateTime
-  asalRujukan     String?
-  status          String      @default("PENDING")
-  createdAt       DateTime    @default(now())
+  id             String     @id @default(uuid())
+  userId         String
+  tipePasien     TipePasien
+  nomorIdentitas String
+  tanggalLahir   DateTime
+  asalRujukan    String?
+  status         String     @default("PENDING")
+  createdAt      DateTime   @default(now())
 
-  user            User        @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }

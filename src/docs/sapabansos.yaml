@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  title: Sapa Bansos API
+  version: 1.0.0
+paths:
+  /sapa-bansos/user/{userID}:
+    get:
+      tags:
+        - Sapa Bansos
+      summary: Check Social Assistance (Bansos) eligibility by NIK (userID)
+      description: Returns bansos details and collection date if user ID (NIK) is eligible. Otherwise, returns 'Kamu tidak terdaftar pada penerima bansos'.
+      parameters:
+        - in: path
+          name: userID
+          required: true
+          schema:
+            type: string
+          description: The user ID or NIK to verify (e.g. 3201011760371377)
+      responses:
+        '200':
+          description: Eligible for social assistance (Bansos)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Selamat! Anda terdaftar sebagai penerima bansos.
+                  data:
+                    type: object
+                    properties:
+                      nik:
+                        type: string
+                        example: "3201011760371377"
+                      name:
+                        type: string
+                        example: Budi Santoso
+                      email:
+                        type: string
+                        example: budi.santoso@example.com
+                      tanggalPengambilan:
+                        type: string
+                        example: "2026-05-25"
+                      tanggalPengambilanFormatted:
+                        type: string
+                        example: "25 Mei 2026"
+                      message:
+                        type: string
+                        example: Selamat! Anda terdaftar sebagai penerima bansos.
+        '404':
+          description: Not eligible or not registered in the bansos database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Kamu tidak terdaftar pada penerima bansos
+        '400':
+          description: Bad request, missing userID parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Parameter "userID" (NIK) diperlukan

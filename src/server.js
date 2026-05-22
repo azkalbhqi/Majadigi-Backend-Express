@@ -11,11 +11,12 @@ async function startServer() {
     console.log('✔ Database connected successfully');
 
     // 2. Jalankan server
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`
         Majadigi Server is running on port ${PORT}
         Port: ${PORT}
         URL: http://localhost:${PORT}
+        Network URL: http://0.0.0.0:${PORT}
       `);
     });
   } catch (error) {
