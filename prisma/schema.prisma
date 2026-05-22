@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" // or "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // --- CORE USER & PROFILE ---
@@ -32,6 +33,7 @@ model User {
   pendaftaranKarsahusada PendaftaranKarsahusada[]
   pendaftaranSaifulAnwar PendaftaranSaifulAnwar[]
   pendaftaranDahaHusada PendaftaranDahaHusada[]
+  pendaftaranAmbulansSoetomo PendaftaranAmbulansSoetomo[]
 }
 
 model HealthUser {
@@ -74,16 +76,14 @@ model MedicalRecord {
 }
 
 model SkriningTbc {
-  id             Int       @id @default(autoincrement())
-  userId         String
-  coughDuration  Int
-  fever          Boolean
-  weightLoss     Boolean
-  nightSweat     Boolean
-  screeningResult String
-  screeningDate  DateTime  @default(now())
+  id              Int       @id @default(autoincrement())
+  userId          String
+  answers         Json      // Stores user responses: { q1: true, q2: false, ... }
+  score           Int       // Calculated screening score
+  screeningResult String    // Result: "LOW", "MEDIUM", "HIGH"
+  screeningDate   DateTime  @default(now())
 
-  user           User      @relation(fields: [userId], references: [id])
+  user            User      @relation(fields: [userId], references: [id])
 }
 
 enum TipePasien {
@@ -154,4 +154,15 @@ model PendaftaranDahaHusada {
   createdAt       DateTime    @default(now())
 
   user            User        @relation(fields: [userId], references: [id])
+}
+
+model PendaftaranAmbulansSoetomo {
+  id        String   @id @default(uuid())
+  userId    String
+  keluhan   String   @db.Text
+  address   String   @db.Text
+  status    String   @default("PENDING") // PENDING, DISPATCHED, COMPLETED, CANCELLED
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
 }

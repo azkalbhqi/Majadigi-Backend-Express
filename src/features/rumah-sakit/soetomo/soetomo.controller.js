@@ -1,5 +1,3 @@
-// controllers/soetomo.controller.js
-
 import * as service from './soetomo.service.js';
 
 // GET ROOMS
@@ -61,5 +59,43 @@ export const getHistory = async (req, res) => {
     res.status(200).json(history);
   } catch (error) {
     res.status(500).json({ message: error.message, statusCode: 500 });
+  }
+};
+
+export const reserveAmbulance = async (req, res) => {
+  try {
+    const { userId, keluhan, address } = req.body;
+
+    if (!userId || !keluhan || !address) {
+      return res.status(400).json({ message: 'Missing required fields: userId, keluhan, and address' });
+    }
+
+    const data = {
+      userId,
+      keluhan,
+      address,
+    };
+
+    const result = await service.createAmbulanceReservation(data);
+    res.status(201).json({ message: 'Ambulance reservation successful', data: result });
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    res.status(statusCode).json({ message: error.message, statusCode });
+  }
+};
+
+export const getAmbulanceHistory = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'Missing userId parameter' });
+    }
+
+    const history = await service.getAmbulanceReservationHistory(userId);
+    res.status(200).json(history);
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    res.status(statusCode).json({ message: error.message, statusCode });
   }
 };

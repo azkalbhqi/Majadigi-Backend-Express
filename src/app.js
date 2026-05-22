@@ -19,6 +19,7 @@ import soetomoRouter from './features/rumah-sakit/soetomo/soetomo.router.js';
 import hajiJatimRouter from './features/rumah-sakit/haji-jatim/haji.router.js';
 import karsahusadaRouter from './features/rumah-sakit/karsahusada/karsahusada.router.js';
 import saifulanwarRouter from './features/rumah-sakit/saifulanwar/saifulanwar.router.js';
+import rumahsakitRouter from './features/rumah-sakit/rumahsakit.router.js';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/soetomo', soetomoRouter);
 app.use('/haji-jatim', hajiJatimRouter);
 app.use('/karsahusada', karsahusadaRouter);
 app.use('/saiful-anwar', saifulanwarRouter);
+app.use('/rumah-sakit', rumahsakitRouter);
 
 // --- Error Handling ---
 app.use(errorHandler);
