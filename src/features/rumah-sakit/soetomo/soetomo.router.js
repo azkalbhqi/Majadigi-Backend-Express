@@ -14,4 +14,10 @@ router.post('/register', SoetomoController.register);
 // GET REGISTRATION HISTORY
 router.get('/history/:userId', SoetomoController.getHistory);
 
+// POST AMBULANCE RESERVATION
+router.post('/ambulance/reserve', SoetomoController.reserveAmbulance);
+
+// GET AMBULANCE HISTORY
+router.get('/ambulance/history/:userId', SoetomoController.getAmbulanceHistory);
+
 export default router;

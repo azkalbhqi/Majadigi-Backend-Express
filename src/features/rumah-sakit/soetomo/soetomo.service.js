@@ -21,8 +21,6 @@ export const getRooms = async () => {
   }
 };
 
-
-
 export const registerPasien = async (data) => {
   return await prisma.pendaftaranSoetomo.create({
     data,
@@ -31,6 +29,37 @@ export const registerPasien = async (data) => {
 
 export const getRegistrationHistory = async (userId) => {
   return await prisma.pendaftaranSoetomo.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+  });
+};
+
+export const createAmbulanceReservation = async (data) => {
+  const user = await prisma.user.findUnique({
+    where: { id: data.userId },
+  });
+  if (!user) {
+    const error = new Error('User not found');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return await prisma.pendaftaranAmbulansSoetomo.create({
+    data,
+  });
+};
+
+export const getAmbulanceReservationHistory = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (!user) {
+    const error = new Error('User not found');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return await prisma.pendaftaranAmbulansSoetomo.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
   });

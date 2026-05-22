@@ -4,8 +4,14 @@ generator client {
 }
 
 datasource db {
+<<<<<<< HEAD
   provider = "postgresql"
   url      = env("DATABASE_URL")
+=======
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+>>>>>>> e893d1749e282e4bdc538cb69dd2b0797719ef26
 }
 
 // --- CORE USER & PROFILE ---
@@ -31,7 +37,12 @@ model User {
   pendaftaranHajiJatim   PendaftaranHajiJatim[]
   pendaftaranKarsahusada PendaftaranKarsahusada[]
   pendaftaranSaifulAnwar PendaftaranSaifulAnwar[]
+<<<<<<< HEAD
   pendaftaranDahaHusada  PendaftaranDahaHusada[]
+=======
+  pendaftaranDahaHusada PendaftaranDahaHusada[]
+  pendaftaranAmbulansSoetomo PendaftaranAmbulansSoetomo[]
+>>>>>>> e893d1749e282e4bdc538cb69dd2b0797719ef26
 }
 
 model HealthUser {
@@ -73,6 +84,7 @@ model MedicalRecord {
 }
 
 model SkriningTbc {
+<<<<<<< HEAD
   id              Int      @id @default(autoincrement())
   userId          String
   coughDuration   Int
@@ -83,6 +95,16 @@ model SkriningTbc {
   screeningDate   DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+=======
+  id              Int       @id @default(autoincrement())
+  userId          String
+  answers         Json      // Stores user responses: { q1: true, q2: false, ... }
+  score           Int       // Calculated screening score
+  screeningResult String    // Result: "LOW", "MEDIUM", "HIGH"
+  screeningDate   DateTime  @default(now())
+
+  user            User      @relation(fields: [userId], references: [id])
+>>>>>>> e893d1749e282e4bdc538cb69dd2b0797719ef26
 }
 
 enum TipePasien {
@@ -152,5 +174,21 @@ model PendaftaranDahaHusada {
   status         String     @default("PENDING")
   createdAt      DateTime   @default(now())
 
+<<<<<<< HEAD
   user User @relation(fields: [userId], references: [id])
 }
+=======
+  user            User        @relation(fields: [userId], references: [id])
+}
+
+model PendaftaranAmbulansSoetomo {
+  id        String   @id @default(uuid())
+  userId    String
+  keluhan   String   @db.Text
+  address   String   @db.Text
+  status    String   @default("PENDING") // PENDING, DISPATCHED, COMPLETED, CANCELLED
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+>>>>>>> e893d1749e282e4bdc538cb69dd2b0797719ef26

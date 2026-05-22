@@ -53,6 +53,7 @@ app.use('/soetomo', soetomoRouter);
 app.use('/haji-jatim', hajiJatimRouter);
 app.use('/karsahusada', karsahusadaRouter);
 app.use('/saiful-anwar', saifulanwarRouter);
+app.use('/rumah-sakit', rumahsakitRouter);
 
 // --- Error Handling ---
 app.use(errorHandler);

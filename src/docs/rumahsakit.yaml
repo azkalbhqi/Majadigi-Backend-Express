@@ -1,0 +1,204 @@
+tags:
+  - name: Rumah Sakit - Skrining TBC
+    description: Endpoints for Tuberculosis (TBC) screening
+
+paths:
+  /rumah-sakit/tbc-screening/questions:
+    get:
+      tags:
+        - Rumah Sakit - Skrining TBC
+      summary: Retrieve the list of 10 TBC screening questions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "TBC screening questions retrieved successfully"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "q1"
+                        text:
+                          type: string
+                          example: "Apakah Anda mengalami batuk berkepanjangan (berdahak maupun kering) selama 2 minggu atau lebih?"
+                        weight:
+                          type: integer
+                          example: 3
+                        category:
+                          type: string
+                          example: "Gejala Utama"
+        '500':
+          description: Internal server error
+
+  /rumah-sakit/tbc-screening/submit:
+    post:
+      tags:
+        - Rumah Sakit - Skrining TBC
+      summary: Submit TBC screening answers and get screening outcome
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - answers
+              properties:
+                userId:
+                  type: string
+                  description: User ID (UUID)
+                  example: "da5092c7-a572-4232-944d-f7d4215633e6"
+                answers:
+                  type: object
+                  description: Object containing q1 to q10 answers (true for Yes, false for No)
+                  example:
+                    q1: true
+                    q2: false
+                    q3: true
+                    q4: false
+                    q5: false
+                    q6: false
+                    q7: false
+                    q8: true
+                    q9: false
+                    q10: false
+      responses:
+        '201':
+          description: Screening submitted and evaluated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "TBC screening completed successfully"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      userId:
+                        type: string
+                        example: "da5092c7-a572-4232-944d-f7d4215633e6"
+                      userName:
+                        type: string
+                        example: "Test User"
+                      score:
+                        type: integer
+                        example: 6
+                      result:
+                        type: string
+                        example: "MEDIUM"
+                      recommendation:
+                        type: string
+                        example: "Potensi TBC Sedang. Disarankan untuk melakukan pemeriksaan lebih lanjut (seperti tes dahak/Sputum atau Rontgen Dada) di Puskesmas atau Rumah Sakit terdekat."
+                      answers:
+                        type: object
+                        example:
+                          q1: true
+                          q2: false
+                          q3: true
+                          q4: false
+                          q5: false
+                          q6: false
+                          q7: false
+                          q8: true
+                          q9: false
+                          q10: false
+                      screeningDate:
+                        type: string
+                        format: date-time
+                        example: "2026-05-20T02:22:23.000Z"
+        '400':
+          description: Validation error (e.g. missing fields, invalid answers format)
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /rumah-sakit/tbc-screening/history/{userId}:
+    get:
+      tags:
+        - Rumah Sakit - Skrining TBC
+      summary: Retrieve TBC screening history for a specific user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+          description: User ID (UUID)
+          example: "da5092c7-a572-4232-944d-f7d4215633e6"
+      responses:
+        '200':
+          description: History retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "TBC screening history retrieved successfully"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        userId:
+                          type: string
+                          example: "da5092c7-a572-4232-944d-f7d4215633e6"
+                        score:
+                          type: integer
+                          example: 6
+                        screeningResult:
+                          type: string
+                          example: "MEDIUM"
+                        screeningDate:
+                          type: string
+                          format: date-time
+                          example: "2026-05-20T02:22:23.000Z"
+                        recommendation:
+                          type: string
+                          example: "Potensi TBC Sedang. Disarankan untuk melakukan pemeriksaan lebih lanjut (seperti tes dahak/Sputum atau Rontgen Dada) di Puskesmas atau Rumah Sakit terdekat."
+                        answers:
+                          type: object
+                          example:
+                            q1: true
+                            q2: false
+                            q3: true
+                            q4: false
+                            q5: false
+                            q6: false
+                            q7: false
+                            q8: true
+                            q9: false
+                            q10: false
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error

@@ -72,3 +72,62 @@ paths:
           description: Successful response
         '500':
           description: Internal server error
+
+  /soetomo/ambulance/reserve:
+    post:
+      tags:
+        - RSUD Dr. Soetomo
+      summary: Reserve an ambulance for RSUD Dr. Soetomo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - keluhan
+                - address
+              properties:
+                userId:
+                  type: string
+                  description: User ID UUID
+                  example: "da5092c7-a572-4232-944d-f7d4215633e6"
+                keluhan:
+                  type: string
+                  description: Reason for calling / symptoms
+                  example: "Pasien mengalami serangan jantung mendadak"
+                address:
+                  type: string
+                  description: Location address for dispatching the ambulance
+                  example: "Jl. Airlangga No.4-6, Airlangga, Kec. Gubeng, Surabaya, Jawa Timur"
+      responses:
+        '201':
+          description: Ambulance reservation successful
+        '400':
+          description: Missing required fields
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /soetomo/ambulance/history/{userId}:
+    get:
+      tags:
+        - RSUD Dr. Soetomo
+      summary: Get ambulance reservation history for a user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+          description: User ID UUID
+          example: "da5092c7-a572-4232-944d-f7d4215633e6"
+      responses:
+        '200':
+          description: Successful response
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
