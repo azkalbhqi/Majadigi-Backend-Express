@@ -32,10 +32,16 @@ export const hashPassword = (password) => {
  */
 export const verifyPassword = (password, storedPassword) => {
   try {
-    const [salt, hash] = storedPassword.split(':');
-    if (!salt || !hash) return false;
-    const verifyHash = crypto.scryptSync(password, salt, 64).toString('hex');
-    return hash === verifyHash;
+    if (storedPassword.includes(':')) {
+      const [salt, hash] = storedPassword.split(':');
+      if (!salt || !hash) return false;
+      const verifyHash = crypto.scryptSync(password, salt, 64).toString('hex');
+      return hash === verifyHash;
+    }
+    
+    // Fallback: Check if it's an MD5 hash (used by pre-existing database users)
+    const md5Hash = crypto.createHash('md5').update(password).digest('hex');
+    return storedPassword === md5Hash;
   } catch (e) {
     return false;
   }

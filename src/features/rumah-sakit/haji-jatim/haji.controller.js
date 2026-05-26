@@ -18,7 +18,7 @@ export const getRooms = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { userId, tipePasien, nomorIdentitas, tanggalLahir, asalRujukan } = req.body;
+    const { userId, tipePasien, nomorIdentitas, tanggalLahir, asalRujukan, dokter, keluhan } = req.body;
 
     if (!userId || !tipePasien || !nomorIdentitas || !tanggalLahir) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -45,6 +45,8 @@ export const register = async (req, res) => {
       nomorIdentitas,
       tanggalLahir: new Date(tanggalLahir),
       asalRujukan: tipePasien === 'JKN' ? asalRujukan : null,
+      dokter,
+      keluhan,
     };
 
     const result = await service.registerPasien(data);

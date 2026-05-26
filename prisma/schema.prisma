@@ -1,48 +1,37 @@
-// Use Prisma 6.1.7 features
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-<<<<<<< HEAD
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-=======
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
->>>>>>> e893d1749e282e4bdc538cb69dd2b0797719ef26
 }
 
-// --- CORE USER & PROFILE ---
-
 model User {
-  id          String    @id
-  name        String
-  email       String    @unique
-  phoneNumber String?
-  password    String
-  address     String?
-  latitude    Decimal?
-  longitude   Decimal?
-  birthDate   DateTime?
-  role        String    @default("PATIENT")
-  createdAt   DateTime  @default(now())
-
-  // Relations
+  id                     String                   @id
+  name                   String
+  email                  String                   @unique
+  phoneNumber            String?
+  password               String
+  address                String?
+  latitude               Decimal?
+  longitude              Decimal?
+  birthDate              DateTime?
+  role                   String                   @default("PATIENT")
+  createdAt              DateTime                 @default(now())
+  imageUrl               String?
+  activities             Activity[]
   healthProfile          HealthUser?
   medicalRecords         MedicalRecord[]
-  tbcScreenings          SkriningTbc[]
-  pendaftaranSoetomo     PendaftaranSoetomo[]
+  pendaftaranDahaHusada  PendaftaranDahaHusada[]
   pendaftaranHajiJatim   PendaftaranHajiJatim[]
   pendaftaranKarsahusada PendaftaranKarsahusada[]
   pendaftaranSaifulAnwar PendaftaranSaifulAnwar[]
-<<<<<<< HEAD
-  pendaftaranDahaHusada  PendaftaranDahaHusada[]
-=======
-  pendaftaranDahaHusada PendaftaranDahaHusada[]
+  pendaftaranSoetomo     PendaftaranSoetomo[]
   pendaftaranAmbulansSoetomo PendaftaranAmbulansSoetomo[]
->>>>>>> e893d1749e282e4bdc538cb69dd2b0797719ef26
+  tbcScreenings          SkriningTbc[]
+  notifications          Notification[]
 }
 
 model HealthUser {
@@ -51,65 +40,44 @@ model HealthUser {
   noBpjs            String?
   bloodType         String?
   vaccinationStatus String?
-
-  user User @relation(fields: [userId], references: [id])
+  tbcStatus         String?
+  user              User    @relation(fields: [userId], references: [id])
 }
 
-// --- HOSPITAL & SERVICES ---
-
 model RumahSakit {
-  id      Int    @id @default(autoincrement())
-  name    String
-  city    String
-  type    String
-  address String
-  phone   String
-
-  // Service Relations
+  id             Int             @id @default(autoincrement())
+  name           String
+  url            String?
+  image          String?
+  address        String
+  deskripsi      String?
+  city           String?
+  phone          String?
+  type           String?
   medicalRecords MedicalRecord[]
 }
 
-// --- MEDICAL INFORMATION SYSTEM (As per Image) ---
-
 model MedicalRecord {
-  id           String   @id @default(uuid())
+  id           String     @id @default(uuid())
   userId       String
   rumahSakitId Int
   dokter       String
-  keluhan      String   @db.Text
-  createdAt    DateTime @default(now())
-
-  user       User       @relation(fields: [userId], references: [id])
-  rumahSakit RumahSakit @relation(fields: [rumahSakitId], references: [id])
+  keluhan      String
+  createdAt    DateTime   @default(now())
+  rumahSakit   RumahSakit @relation(fields: [rumahSakitId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
 }
 
 model SkriningTbc {
-<<<<<<< HEAD
   id              Int      @id @default(autoincrement())
   userId          String
-  coughDuration   Int
-  fever           Boolean
-  weightLoss      Boolean
-  nightSweat      Boolean
   screeningResult String
   screeningDate   DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-=======
-  id              Int       @id @default(autoincrement())
-  userId          String
-  answers         Json      // Stores user responses: { q1: true, q2: false, ... }
-  score           Int       // Calculated screening score
-  screeningResult String    // Result: "LOW", "MEDIUM", "HIGH"
-  screeningDate   DateTime  @default(now())
-
-  user            User      @relation(fields: [userId], references: [id])
->>>>>>> e893d1749e282e4bdc538cb69dd2b0797719ef26
-}
-
-enum TipePasien {
-  JKN
-  NON_JKN
+  coughDuration   Int
+  fever           Boolean
+  nightSweat      Boolean
+  weightLoss      Boolean
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model PendaftaranSoetomo {
@@ -121,8 +89,7 @@ model PendaftaranSoetomo {
   asalRujukan    String?
   status         String     @default("PENDING")
   createdAt      DateTime   @default(now())
-
-  user User @relation(fields: [userId], references: [id])
+  user           User       @relation(fields: [userId], references: [id])
 }
 
 model PendaftaranHajiJatim {
@@ -134,8 +101,7 @@ model PendaftaranHajiJatim {
   asalRujukan    String?
   status         String     @default("PENDING")
   createdAt      DateTime   @default(now())
-
-  user User @relation(fields: [userId], references: [id])
+  user           User       @relation(fields: [userId], references: [id])
 }
 
 model PendaftaranKarsahusada {
@@ -147,8 +113,7 @@ model PendaftaranKarsahusada {
   asalRujukan    String?
   status         String     @default("PENDING")
   createdAt      DateTime   @default(now())
-
-  user User @relation(fields: [userId], references: [id])
+  user           User       @relation(fields: [userId], references: [id])
 }
 
 model PendaftaranSaifulAnwar {
@@ -160,8 +125,7 @@ model PendaftaranSaifulAnwar {
   asalRujukan    String?
   status         String     @default("PENDING")
   createdAt      DateTime   @default(now())
-
-  user User @relation(fields: [userId], references: [id])
+  user           User       @relation(fields: [userId], references: [id])
 }
 
 model PendaftaranDahaHusada {
@@ -173,22 +137,46 @@ model PendaftaranDahaHusada {
   asalRujukan    String?
   status         String     @default("PENDING")
   createdAt      DateTime   @default(now())
-
-<<<<<<< HEAD
-  user User @relation(fields: [userId], references: [id])
+  user           User       @relation(fields: [userId], references: [id])
 }
-=======
-  user            User        @relation(fields: [userId], references: [id])
+
+model Activity {
+  id          String   @id @default(uuid())
+  userId      String
+  feature     String
+  description String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Layanan {
+  id                String   @id @default(uuid())
+  icon              String
+  nama              String
+  slug              String   @unique
+  deskripsi_singkat String
+  home              Boolean?
 }
 
 model PendaftaranAmbulansSoetomo {
   id        String   @id @default(uuid())
   userId    String
-  keluhan   String   @db.Text
-  address   String   @db.Text
-  status    String   @default("PENDING") // PENDING, DISPATCHED, COMPLETED, CANCELLED
+  keluhan   String
+  address   String
   createdAt DateTime @default(now())
-
   user      User     @relation(fields: [userId], references: [id])
 }
->>>>>>> e893d1749e282e4bdc538cb69dd2b0797719ef26
+
+enum TipePasien {
+  JKN
+  NON_JKN
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

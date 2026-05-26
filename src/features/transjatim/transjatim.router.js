@@ -3,6 +3,7 @@ import * as TransJatimController from './transjatim.controller.js';
 
 const router = Router();
 
+
 // Endpoint Agregasi (Utama)
 router.get('/summary', TransJatimController.getSummary);
 

@@ -37,7 +37,8 @@ export const registerUser = async ({ nik, email, name, password }) => {
     id: user.id,
     name: user.name,
     email: user.email,
-    role: user.role
+    role: user.role,
+    imageUrl: user.imageUrl
   };
 };
 
@@ -75,7 +76,44 @@ export const loginUser = async ({ identifier, password }) => {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      imageUrl: user.imageUrl
     }
   };
+};
+
+export const updateUserProfile = async (userId, updateData) => {
+  if (updateData.email) {
+    const existing = await prisma.user.findFirst({
+      where: {
+        email: updateData.email,
+        NOT: { id: userId }
+      }
+    });
+    if (existing) {
+      throw new Error('Email sudah terdaftar');
+    }
+  }
+
+  const dataToUpdate = { ...updateData };
+  if (updateData.password) {
+    dataToUpdate.password = hashPassword(updateData.password);
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: dataToUpdate
+  });
+
+  return {
+    id: updatedUser.id,
+    name: updatedUser.name,
+    email: updatedUser.email,
+    role: updatedUser.role,
+    imageUrl: updatedUser.imageUrl
+  };
+};
+
+export const updateUserProfileUrl = async (userId, imageUrl) => {
+  return updateUserProfile(userId, { imageUrl });
 };

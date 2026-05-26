@@ -1,3 +1,7 @@
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
 // List of mock NIKs from the image
 const MOCK_PROFILES = {
   '3201011760371377': {
@@ -50,7 +54,7 @@ export const calculatePickupDate = () => {
   }
 
   const targetDate = new Date(year, month, 25);
-  
+
   const yyyy = targetDate.getFullYear();
   const mm = String(targetDate.getMonth() + 1).padStart(2, '0');
   const dd = String(targetDate.getDate()).padStart(2, '0');
@@ -67,15 +71,48 @@ export const calculatePickupDate = () => {
  * If not, returns not found.
  */
 export const checkBansosEligibility = async (userID) => {
+  const isEligible = !!MOCK_PROFILES[userID];
+  try {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: userID }
+    });
+    if (dbUser) {
+      await prisma.activity.create({
+        data: {
+          userId: userID,
+          feature: 'Sapa Bansos',
+          description: `Mengecek kelayakan bansos NIK: ${userID} - Hasil: ${isEligible ? 'Terdaftar' : 'Tidak Terdaftar'}`
+        }
+      });
+    }
+  } catch (err) {
+    console.error('Failed to log bansos activity check:', err.message);
+  }
+
   if (MOCK_PROFILES[userID]) {
     const profile = MOCK_PROFILES[userID];
+    let name = profile.name;
+    let email = profile.email;
+
+    try {
+      const dbUser = await prisma.user.findUnique({
+        where: { id: userID }
+      });
+      if (dbUser) {
+        name = dbUser.name;
+        email = dbUser.email;
+      }
+    } catch (err) {
+      console.error('Failed to fetch user from DB in checkBansosEligibility:', err.message);
+    }
+
     const dates = calculatePickupDate();
     return {
       eligible: true,
       data: {
         nik: userID,
-        name: profile.name,
-        email: profile.email,
+        name: name,
+        email: email,
         tanggalPengambilan: dates.isoDate,
         tanggalPengambilanFormatted: dates.formattedDate,
         message: 'Selamat! Anda terdaftar sebagai penerima bansos.'

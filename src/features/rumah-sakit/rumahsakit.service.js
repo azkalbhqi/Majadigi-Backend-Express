@@ -1,4 +1,5 @@
 import prisma from '../../config/prisma.js';
+import axios from 'axios';
 
 export const QUESTIONS = [
   {
@@ -115,8 +116,10 @@ export const submitScreening = async (userId, answers) => {
   const record = await prisma.skriningTbc.create({
     data: {
       userId,
-      answers,
-      score,
+      coughDuration: answers['q1'] === true ? 2 : 0,
+      fever: answers['q3'] === true,
+      weightLoss: answers['q5'] === true,
+      nightSweat: answers['q4'] === true,
       screeningResult: result,
     },
     include: {
@@ -129,14 +132,38 @@ export const submitScreening = async (userId, answers) => {
     }
   });
 
+  // 6. Integrate with HealthUser table
+  try {
+    await prisma.healthUser.upsert({
+      where: { userId },
+      update: { tbcStatus: result },
+      create: { userId, tbcStatus: result },
+    });
+  } catch (err) {
+    console.error('Failed to upsert HealthUser record during TBC screening:', err.message);
+  }
+
+  // Log activity
+  try {
+    await prisma.activity.create({
+      data: {
+        userId,
+        feature: 'Skrining TBC',
+        description: `Melakukan Skrining TBC (E-TIBI) - Hasil: Risiko ${result}`
+      }
+    });
+  } catch (err) {
+    console.error('Failed to log TBC screening activity:', err.message);
+  }
+
   return {
     id: record.id,
     userId: record.userId,
     userName: record.user.name,
-    score: record.score,
+    score: score,
     result: record.screeningResult,
     recommendation,
-    answers: record.answers,
+    answers: answers,
     screeningDate: record.screeningDate
   };
 };
@@ -161,24 +188,79 @@ export const getScreeningHistory = async (userId) => {
     orderBy: { screeningDate: 'desc' }
   });
 
-  // Add recommendations to history entries dynamically
+  // Map database columns back to answers and computed score for front-end compatibility
   return history.map(record => {
+    let computedScore = 0;
+    if (record.coughDuration >= 2) computedScore += 3;
+    if (record.fever) computedScore += 2;
+    if (record.weightLoss) computedScore += 2;
+    if (record.nightSweat) computedScore += 2;
+
     let recommendation = "Potensi TBC Rendah. Tetap jaga kesehatan dan konsultasikan ke dokter jika gejala memburuk.";
-    if (record.score >= 6 && record.score < 10) {
+    if (computedScore >= 6 && computedScore < 10) {
       recommendation = "Potensi TBC Sedang. Disarankan untuk melakukan pemeriksaan lebih lanjut (seperti tes dahak/Sputum atau Rontgen Dada) di Puskesmas atau Rumah Sakit terdekat.";
-    } else if (record.score >= 10) {
+    } else if (computedScore >= 10) {
       recommendation = "Potensi TBC Tinggi. Sangat disarankan untuk segera memeriksakan diri ke dokter atau fasilitas kesehatan terdekat untuk mendapatkan penanganan medis segera.";
     }
 
     return {
-      ...record,
-      recommendation
+      id: record.id,
+      userId: record.userId,
+      score: computedScore,
+      screeningResult: record.screeningResult,
+      screeningDate: record.screeningDate,
+      recommendation,
+      answers: {
+        q1: record.coughDuration >= 2,
+        q3: record.fever,
+        q4: record.nightSweat,
+        q5: record.weightLoss,
+      }
     };
   });
+};
+
+/**
+ * Retrieves the catalog of all hospitals.
+ */
+export const getAllRumahSakit = async () => {
+  return await prisma.rumahSakit.findMany();
+};
+
+const HOSPITAL_URL_MAP = {
+  'daha-husada': 'rsud-daha-husada',
+  'soetomo': 'rsud-dr-soetomo',
+  'haji-jatim': 'rsud-haji-prov-jatim',
+  'karsahusada': 'rsud-karsa-husada-batu',
+  'saiful-anwar': 'rsud-dr.-saiful-anwar'
+};
+
+/**
+ * Fetches layanan details for a specific hospital path from the external public API.
+ */
+export const getLayananByHospitalPath = async (hospitalPath) => {
+  const dbUrl = HOSPITAL_URL_MAP[hospitalPath];
+  if (!dbUrl) {
+    return null; // Return null so controller can call next() for fall-through
+  }
+
+  try {
+    const response = await axios.get(
+      `https://api.majadigi.jatimprov.go.id/api/public/layanan/${dbUrl}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching services for ${hospitalPath}:`, error.message);
+    const apiError = new Error('Failed to fetch hospital service data');
+    apiError.statusCode = error.response?.status || 500;
+    throw apiError;
+  }
 };
 
 export default {
   getQuestions,
   submitScreening,
-  getScreeningHistory
+  getScreeningHistory,
+  getAllRumahSakit,
+  getLayananByHospitalPath
 };

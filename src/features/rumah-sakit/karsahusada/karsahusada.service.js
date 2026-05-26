@@ -25,9 +25,48 @@ export const getRooms = async () => {
 
 
 export const registerPasien = async (data) => {
-  return await prisma.pendaftaranKarsahusada.create({
-    data,
+  const { dokter, keluhan, ...registrationData } = data;
+
+  const registration = await prisma.pendaftaranKarsahusada.create({
+    data: registrationData,
   });
+
+  try {
+    const rs = await prisma.rumahSakit.findFirst({
+      where: { url: { contains: 'karsa' } }
+    });
+    if (rs) {
+      await prisma.medicalRecord.create({
+        data: {
+          userId: registrationData.userId,
+          rumahSakitId: rs.id,
+          dokter: dokter || 'dr. Umum (Poli Umum)',
+          keluhan: keluhan || 'Pendaftaran online Rumah Sakit',
+        }
+      });
+    }
+
+    if (registrationData.tipePasien === 'JKN' && registrationData.nomorIdentitas) {
+      await prisma.healthUser.upsert({
+        where: { userId: registrationData.userId },
+        update: { noBpjs: registrationData.nomorIdentitas },
+        create: { userId: registrationData.userId, noBpjs: registrationData.nomorIdentitas },
+      });
+    }
+
+    // Log activity
+    await prisma.activity.create({
+      data: {
+        userId: registrationData.userId,
+        feature: 'Pendaftaran Antrian',
+        description: 'Mendaftar antrian di RSUD Karsa Husada Batu',
+      },
+    });
+  } catch (err) {
+    console.error('Karsa Husada registration integration error:', err.message);
+  }
+
+  return registration;
 };
 
 export const getRegistrationHistory = async (userId) => {
