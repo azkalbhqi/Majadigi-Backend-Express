@@ -7,10 +7,26 @@
   "type": "module",
   "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "build": "prisma generate"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {},
+    "reporters": [
+      "default",
+      [
+        "jest-html-reporter",
+        {
+          "pageTitle": "Majadigi Backend API Test Report",
+          "outputPath": "./tests/test-report.html",
+          "includeFailureMsg": true,
+          "includeConsoleLog": true
+        }
+      ]
+    ]
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
@@ -23,5 +39,10 @@
     "prisma": "^6.7.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "jest-html-reporter": "^4.4.0",
+    "supertest": "^7.2.2"
   }
 }

@@ -14,7 +14,11 @@ import authRoutes from './features/auth/auth.routes.js';
 import transjatimRouter from './features/transjatim/transjatim.router.js';
 import opendataRouter from './features/opendata/opendata.router.js';
 import nomorRouter from './features/nomor-darurat/nomor.router.js';
-import rumahsakitRouter from './features/rumah-sakit/rumahsakit.router.js';
+import dahaHusadaRouter from './features/rumah-sakit/dahahusada/dahahusada.router.js';
+import soetomoRouter from './features/rumah-sakit/soetomo/soetomo.router.js';
+import hajiJatimRouter from './features/rumah-sakit/haji-jatim/haji.router.js';
+import karsahusadaRouter from './features/rumah-sakit/karsahusada/karsahusada.router.js';
+import saifulanwarRouter from './features/rumah-sakit/saifulanwar/saifulanwar.router.js';
 import sapabansosRouter from './features/sapa-bansos/sapabansos.router.js';
 import activityRouter from './features/activity/activity.router.js';
 import layananRouter from './features/layanan/layanan.router.js';
@@ -52,7 +56,11 @@ app.use('/home', homeRouter);
 app.use('/notification', notificationRouter);
 
 //Rumah sakit
-app.use('/rumah-sakit', rumahsakitRouter);
+app.use('/daha-husada', dahaHusadaRouter);
+app.use('/soetomo', soetomoRouter);
+app.use('/haji-jatim', hajiJatimRouter);
+app.use('/karsahusada', karsahusadaRouter);
+app.use('/saiful-anwar', saifulanwarRouter);
 
 // --- Error Handling ---
 app.use(errorHandler);
