@@ -1,5 +1,10 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const options = {
   definition: {
@@ -9,8 +14,12 @@ const options = {
       version: '1.0.0',
     },
   },
-  // Adjust this path if your files are in different locations
-  apis: ['./src/docs/*.yaml', './src/features/**/*.js', './src/app.js'],
+  // Absolute paths relative to this configuration file
+  apis: [
+    path.join(__dirname, '../docs/*.yaml'),
+    path.join(__dirname, '../features/**/*.js'),
+    path.join(__dirname, '../app.js'),
+  ],
 };
 
 const specs = swaggerJsdoc(options);
