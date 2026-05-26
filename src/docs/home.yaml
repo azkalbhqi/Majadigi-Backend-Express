@@ -1,0 +1,122 @@
+paths:
+  /home/beranda:
+    get:
+      summary: Retrieve data for the home dashboard (integrated layanan and banners)
+      tags:
+        - Home
+      responses:
+        200:
+          description: Home dashboard data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      layanan:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: "e208b872-9b2f-4aef-ba9b-0a6cfb16a222"
+                            icon:
+                              type: string
+                              example: "directions_bus"
+                            nama:
+                              type: string
+                              example: "Transjatim"
+                            slug:
+                              type: string
+                              example: "transjatim"
+                      banners:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: "b1"
+                            title:
+                              type: string
+                              example: "Layanan Majadigi Kini Hadir"
+                            imageUrl:
+                              type: string
+                              example: "https://majadigi.com/banner.png"
+        500:
+          description: Internal server error
+
+  /home/kategori-layanan-daerah:
+    get:
+      summary: Retrieve categories of local services
+      tags:
+        - Home
+      responses:
+        200:
+          description: Categories retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "c1"
+                        nama:
+                          type: string
+                          example: "Kesehatan"
+                        icon:
+                          type: string
+                          example: "local_hospital"
+        500:
+          description: Internal server error
+
+  /home/jatim-angka:
+    get:
+      summary: Retrieve public statistics / numbers for East Java
+      tags:
+        - Home
+      responses:
+        200:
+          description: East Java statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "s1"
+                        title:
+                          type: string
+                          example: "Total Penduduk"
+                        value:
+                          type: string
+                          example: "40.66 Juta"
+                        source:
+                          type: string
+                          example: "BPS Jatim 2023"
+        500:
+          description: Internal server error

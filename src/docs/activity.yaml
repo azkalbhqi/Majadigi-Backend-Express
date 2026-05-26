@@ -1,0 +1,109 @@
+paths:
+  /activity:
+    post:
+      summary: Log a new user activity
+      tags:
+        - Activity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - feature
+                - description
+              properties:
+                userId:
+                  type: string
+                  example: "3201011234567890"
+                feature:
+                  type: string
+                  example: "Transjatim"
+                description:
+                  type: string
+                  example: "Membuka jadwal bus Transjatim"
+      responses:
+        201:
+          description: Activity logged successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Activity logged successfully"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "a809f928-1b5e-4a6c-941f-827c81d39999"
+                      userId:
+                        type: string
+                        example: "3201011234567890"
+                      feature:
+                        type: string
+                        example: "Transjatim"
+                      description:
+                        type: string
+                        example: "Membuka jadwal bus Transjatim"
+                      createdAt:
+                        type: string
+                        example: "2026-05-26T12:00:00Z"
+        400:
+          description: Missing required fields
+        500:
+          description: Internal server error
+
+  /activity/{userId}:
+    get:
+      summary: Get activity history for a specific user
+      tags:
+        - Activity
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+          example: "3201011234567890"
+          description: User ID (NIK)
+      responses:
+        200:
+          description: Activity history retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "a809f928-1b5e-4a6c-941f-827c81d39999"
+                        userId:
+                          type: string
+                          example: "3201011234567890"
+                        feature:
+                          type: string
+                          example: "Transjatim"
+                        description:
+                          type: string
+                          example: "Membuka jadwal bus Transjatim"
+                        createdAt:
+                          type: string
+                          example: "2026-05-26T12:00:00Z"
+        500:
+          description: Internal server error

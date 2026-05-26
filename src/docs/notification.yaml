@@ -1,0 +1,109 @@
+paths:
+  /notification/{userId}:
+    get:
+      summary: Retrieve notifications for a specific user
+      tags:
+        - Notification
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+          example: "3201011234567890"
+          description: NIK of the user
+      responses:
+        200:
+          description: Notifications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "n1"
+                        userId:
+                          type: string
+                          example: "3201011234567890"
+                        title:
+                          type: string
+                          example: "Pemberitahuan Pendaftaran"
+                        body:
+                          type: string
+                          example: "Pendaftaran ambulans Anda telah disetujui."
+                        createdAt:
+                          type: string
+                          example: "2026-05-26T12:00:00Z"
+        500:
+          description: Internal server error
+
+  /notification:
+    post:
+      summary: Send/create a new notification for a user
+      tags:
+        - Notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - title
+                - body
+              properties:
+                userId:
+                  type: string
+                  example: "3201011234567890"
+                title:
+                  type: string
+                  example: "Info Baru"
+                body:
+                  type: string
+                  example: "Silakan periksa update jadwal terbaru."
+      responses:
+        201:
+          description: Notification created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Notification created successfully"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "n2"
+                      userId:
+                        type: string
+                        example: "3201011234567890"
+                      title:
+                        type: string
+                        example: "Info Baru"
+                      body:
+                        type: string
+                        example: "Silakan periksa update jadwal terbaru."
+                      createdAt:
+                        type: string
+                        example: "2026-05-26T12:05:00Z"
+        400:
+          description: Missing required fields
+        500:
+          description: Internal server error

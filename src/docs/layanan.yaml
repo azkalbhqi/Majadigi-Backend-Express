@@ -1,0 +1,42 @@
+paths:
+  /layanan/integrated:
+    get:
+      summary: Retrieve all integrated services (Layanan)
+      tags:
+        - Layanan
+      responses:
+        200:
+          description: List of integrated services retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "e208b872-9b2f-4aef-ba9b-0a6cfb16a222"
+                        icon:
+                          type: string
+                          example: "directions_bus"
+                        nama:
+                          type: string
+                          example: "Transjatim"
+                        slug:
+                          type: string
+                          example: "transjatim"
+                        deskripsi_singkat:
+                          type: string
+                          example: "Jadwal dan rute bus antar kota Jawa Timur"
+                        home:
+                          type: boolean
+                          example: true
+        500:
+          description: Internal server error

@@ -128,3 +128,72 @@ paths:
           description: Invalid NIK/Email or password
         500:
           description: Internal server error
+
+  /auth/profile:
+    patch:
+      summary: Update user profile details (name, email, password, imageUrl)
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: string
+                  example: "3201011234567890"
+                  description: NIK of the user being updated
+                name:
+                  type: string
+                  example: "Ahmad Dani Prasetyo"
+                email:
+                  type: string
+                  example: "newemail@example.com"
+                password:
+                  type: string
+                  example: "newsecurepassword123"
+                imageUrl:
+                  type: string
+                  example: "https://supabase.co/storage/v1/object/public/profile/avatar.png"
+      responses:
+        200:
+          description: Profile successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Profile updated successfully"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "3201011234567890"
+                      name:
+                        type: string
+                        example: "Ahmad Dani Prasetyo"
+                      email:
+                        type: string
+                        example: "newemail@example.com"
+                      role:
+                        type: string
+                        example: "PATIENT"
+                      imageUrl:
+                        type: string
+                        example: "https://supabase.co/storage/v1/object/public/profile/avatar.png"
+        400:
+          description: Validation error or invalid user ID
+        409:
+          description: Email already registered by another user
+        500:
+          description: Internal server error
