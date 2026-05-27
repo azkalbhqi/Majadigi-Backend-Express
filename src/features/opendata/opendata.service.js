@@ -1,5 +1,13 @@
 import axios from 'axios';
-import fallbackDataJson from './data_opendata.json' assert { type: 'json' };
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const fallbackFilePath = path.join(__dirname, 'data_opendata.json');
+const fallbackDataJson = JSON.parse(fs.readFileSync(fallbackFilePath, 'utf8'));
 
 const OPEN_DATA_BASE_URL = 'https://opendata.jatimprov.go.id/api';
 
