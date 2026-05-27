@@ -1,10 +1,7 @@
 {
   "functions": {
     "api/index.js": {
-      "includeFiles": [
-        "src/docs/*.yaml",
-        "data-fallback/data_opendata.csv"
-      ]
+      "includeFiles": "{src/docs/*.yaml,data-fallback/data_opendata.csv}"
     }
   },
   "rewrites": [
