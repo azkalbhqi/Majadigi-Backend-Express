@@ -40,7 +40,14 @@ export const getDatasets = async (searchKeyword = '') => {
       }
     }));
   } catch (error) {
+    // Log detailed error for debugging
     console.error('OpenData Service Error:', error.message);
-    throw new Error('Gagal mengambil dataset dari Open Data Jatim');
+    // If the external API is unreachable, return an empty array instead of throwing
+    if (error.code === 'ENOTFOUND' || error.message.includes('Server Down')) {
+      console.warn('Open Data external API unavailable – returning empty dataset');
+      return [];
+    }
+    // Propagate other unexpected errors
+    throw new Error('Failed to fetch Open Data datasets');
   }
 };
