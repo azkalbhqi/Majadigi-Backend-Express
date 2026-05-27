@@ -24,6 +24,7 @@ import activityRouter from './features/activity/activity.router.js';
 import layananRouter from './features/layanan/layanan.router.js';
 import homeRouter from './features/home/home.router.js';
 import notificationRouter from './features/notification/notification.router.js';
+import rumahSakitRouter from './features/rumah-sakit/rumah-sakit.router.js';
 
 const app = express();
 
@@ -56,6 +57,8 @@ app.use('/home', homeRouter);
 app.use('/notification', notificationRouter);
 
 //Rumah sakit
+app.use('/rumah-sakit', rumahSakitRouter);
+
 app.use('/daha-husada', dahaHusadaRouter);
 app.use('/soetomo', soetomoRouter);
 app.use('/haji-jatim', hajiJatimRouter);
