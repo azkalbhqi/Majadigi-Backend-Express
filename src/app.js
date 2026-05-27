@@ -24,7 +24,7 @@ import activityRouter from './features/activity/activity.router.js';
 import layananRouter from './features/layanan/layanan.router.js';
 import homeRouter from './features/home/home.router.js';
 import notificationRouter from './features/notification/notification.router.js';
-import rumahSakitRouter from './features/rumah-sakit/rumah-sakit.router.js';
+import rumahSakitRouter from './features/rumah-sakit/rumahsakit.router.js';
 
 const app = express();
 
