@@ -25,10 +25,13 @@ import layananRouter from './features/layanan/layanan.router.js';
 import homeRouter from './features/home/home.router.js';
 import notificationRouter from './features/notification/notification.router.js';
 import rumahSakitRouter from './features/rumah-sakit/rumahsakit.router.js';
+import { trafficInterceptor } from './features/monitoring/monitoring.middleware.js';
+import monitoringRouter from './features/monitoring/monitoring.router.js';
 
 const app = express();
 
 // --- Global Middlewares ---
+app.use(trafficInterceptor);      // Track API traffic metrics
 app.use(helmet());                // Security headers
 app.use(cors());                  // Allow cross-origin requests
 app.use(morgan('dev'));           // Logger
@@ -55,6 +58,7 @@ app.use('/activity', activityRouter);
 app.use('/layanan', layananRouter);
 app.use('/home', homeRouter);
 app.use('/notification', notificationRouter);
+app.use('/monitoring', monitoringRouter);
 
 //Rumah sakit
 app.use('/rumah-sakit', rumahSakitRouter);
